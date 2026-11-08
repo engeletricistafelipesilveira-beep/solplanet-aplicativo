@@ -1465,28 +1465,39 @@ export default function App() {
                           <div className="text-slate-400 font-mono">User: {u.username}</div>
                         </div>
                         {currentUser.role === 'Master' && u.id !== currentUser.id && (
-                          <button 
-                            onClick={() => {
-                              const updated = usersList.map(x => x.id === u.id ? { ...x, password: '123456' } : x);
-                              setUsersList(updated);
-                              saveCollection('users', updated);
-                              addLog(`Resetou a senha do usuário: "${u.username}"`);
-                              addToast(`Senha de ${u.username} resetada para "123456".`, 'success');
-                            }} 
-                            title="Resetar Senha" 
-                            className="p-1.5 text-slate-400 hover:text-[#a31d5b]"
-                          >
-                            <Key className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <button 
+                              onClick={() => {
+                                const updated = usersList.map(x => x.id === u.id ? { ...x, password: '123456' } : x);
+                                setUsersList(updated);
+                                saveCollection('users', updated);
+                                addLog(`Resetou a senha do usuário: "${u.username}"`);
+                                addToast(`Senha de ${u.username} resetada para "123456".`, 'success');
+                              }} 
+                              title="Resetar Senha" 
+                              className="p-1.5 text-slate-400 hover:text-[#a31d5b]"
+                            >
+                              <Key className="w-4 h-4" />
+                            </button>
+                            <button 
+                              onClick={() => {
+                                const updated = usersList.filter(x => x.id !== u.id);
+                                setUsersList(updated);
+                                saveCollection('users', updated);
+                                addLog(`Excluiu o usuário: "${u.username}"`);
+                                addToast('Usuário excluído com sucesso.', 'success');
+                              }} 
+                              title="Excluir Usuário" 
+                              className="p-1.5 text-slate-400 hover:text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         )}
                       </div>
                     ))}
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
-
           {/* MODAL: AUDITORIA / LOGS */}
           {activeModal === 'auditoria' && (
             <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-200">
