@@ -272,7 +272,6 @@ export default function App() {
               // Garante que o usuário Master (id '1') sempre se chame 'Admin'
               const fixedUsers = loadedUsers.map(u => u.id === '1' ? { ...u, name: 'Admin', role: 'Master' } : u);
               setUsersList(fixedUsers);
-            }
             } else if (item.key === 'areas') {
               setAreasList(item.payload?.items || INITIAL_AREAS);
             } else if (item.key === 'processes') {
