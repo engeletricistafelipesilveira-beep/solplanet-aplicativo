@@ -219,7 +219,8 @@ export default function App() {
   const saved = localStorage.getItem('solplanet_logged_user');
   return saved ? JSON.parse(saved) : null;
 });
-
+const [confirmModal, setConfirmModal] = useState({ show: false, title: '', message: '', onConfirm: null });
+  
   // Supabase Synced States
   const [logo, setLogo] = useState('https://placehold.co/140x35/a31d5b/ffffff?text=Solplanet');
   const [usersList, setUsersList] = useState([]);
