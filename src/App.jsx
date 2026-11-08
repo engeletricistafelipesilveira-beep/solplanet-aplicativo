@@ -352,6 +352,7 @@ export default function App() {
 
     if (foundUser) {
       setCurrentUser(foundUser);
+      localStorage.setItem('solplanet_logged_user', JSON.stringify(foundUser));
       setCurrentView('list');
       addLog(`Usuário efetuou login (${foundUser.role})`);
       addToast(`Bem-vindo, ${foundUser.name}!`, 'success');
@@ -365,6 +366,7 @@ export default function App() {
       addLog('Usuário efetuou logout');
     }
     setCurrentUser(null);
+    localStorage.removeItem('solplanet_logged_user');
     setCurrentView('login');
   };
 
