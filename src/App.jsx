@@ -1307,6 +1307,58 @@ export default function App() {
             </div>
           )}
 
+          {/* MODAL: GERENCIAR ÁREAS E SUBÁREAS */}
+          {activeModal === 'areas' && (
+            <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden border border-slate-200">
+              <div className="bg-[#0f172a] text-white p-4 flex items-center justify-between">
+                <h3 className="font-bold text-sm flex items-center gap-2"><Layers className="w-4 h-4 text-[#a31d5b]" /> Gerenciar Áreas e Subáreas</h3>
+                <button onClick={() => setActiveModal(null)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
+              </div>
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const areaName = e.target.areaName.value.trim();
+                  const subareaName = e.target.subareaName.value.trim();
+                  if (!areaName) return addToast('Digite o nome da área.', 'error');
+
+                  let updatedAreas = [...areasList];
+                  const existingArea = updatedAreas.find(a => a.name.toLowerCase() === areaName.toLowerCase());
+
+                  if (existingArea) {
+                    if (subareaName && !existingArea.subareas.includes(subareaName)) {
+                      existingArea.subareas.push(subareaName);
+                    }
+                  } else {
+                    updatedAreas.push({
+                      id: 'area-' + Date.now(),
+                      name: areaName,
+                      subareas: subareaName ? [subareaName] : []
+                    });
+                  }
+
+                  setAreasList(updatedAreas);
+                  saveCollection('areas', updatedAreas);
+                  addLog(`Adicionou/Atualizou a área: "${areaName}"`);
+                  addToast('Área salva com sucesso!', 'success');
+                  setActiveModal(null);
+                }} 
+                className="p-6 space-y-4"
+              >
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Nome da Área</label>
+                  <input type="text" name="areaName" placeholder="Ex: Engenharia Elétrica" required className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Nova Subárea (Opcional)</label>
+                  <input type="text" name="subareaName" placeholder="Ex: Inversores Híbridos" className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <button type="submit" className="w-full py-2.5 bg-[#a31d5b] hover:bg-[#8b194d] text-white font-bold text-xs rounded-xl shadow-md">
+                  Salvar Área / Subárea
+                </button>
+              </form>
+            </div>
+          )}
+
           {/* MODAL: REVISÕES / ERROS */}
           {activeModal === 'revisoes' && (
             <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-200">
