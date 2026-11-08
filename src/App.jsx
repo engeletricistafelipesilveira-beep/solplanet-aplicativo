@@ -485,13 +485,21 @@ export default function App() {
     setCurrentView('list');
   };
 
-  const deleteProcess = (procId) => {
+ const deleteProcess = (procId) => {
     const proc = processes.find(p => p.id === procId);
-    const updated = processes.filter(p => p.id !== procId);
-    setProcesses(updated);
-    saveCollection('processes', updated);
-    addLog(`Excluiu o processo: "${proc ? proc.title : procId}"`);
-    addToast('Processo excluído.');
+    setConfirmModal({
+      show: true,
+      title: 'Excluir Processo',
+      message: `Tem certeza que deseja excluir o processo "${proc ? proc.title : procId}"?`,
+      onConfirm: () => {
+        const updated = processes.filter(p => p.id !== procId);
+        setProcesses(updated);
+        saveCollection('processes', updated);
+        addLog(`Excluiu o processo: "${proc ? proc.title : procId}"`);
+        addToast('Processo excluído.');
+        setConfirmModal({ show: false, title: '', message: '', onConfirm: null });
+      }
+    });
   };
 
   // --- 6. IMPORT / EXPORT & BACKUP ---
@@ -1729,7 +1737,30 @@ export default function App() {
 
         </div>
       )}
-
+      
+      {/* MODAL UNIVERSAL DE CONFIRMAÇÃO (POP-UP) */}
+      {confirmModal.show && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-200 text-center">
+            <h3 className="font-bold text-base text-slate-900">{confirmModal.title}</h3>
+            <p className="text-xs text-slate-600">{confirmModal.message}</p>
+            <div className="flex gap-2 pt-2">
+              <button 
+                onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: null })} 
+                className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={confirmModal.onConfirm} 
+                className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl"
+              >
+                Sim, Excluir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* TOAST CONTAINER */}
       <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2">
         {toasts.map(t => (
