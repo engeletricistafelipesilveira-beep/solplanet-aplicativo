@@ -52,8 +52,9 @@ const getEnvVar = (name) => {
   return null;
 };
 
-const SUPABASE_URL = getEnvVar('VITE_SUPABASE_URL') || "https://demo-solplanet.supabase.co";
-const SUPABASE_ANON_KEY = getEnvVar('VITE_SUPABASE_ANON_KEY') || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo-anon-key";
+// --- CONFIGURAÇÃO SUPABASE DIRETA PARA VITE / NETLIFY ---
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://vzdspycdxealiemdqvfc.supabase.co";
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "sua_chave_anon_aqui";
 
 // Lightweight REST/Supabase client implementation para Netlify / Vite sem dependências NPM pesadas
 const supabaseClient = {
