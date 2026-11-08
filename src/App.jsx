@@ -1284,16 +1284,21 @@ export default function App() {
             <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden border border-slate-200">
               <div className="bg-[#a31d5b] text-white p-4 flex items-center justify-between">
                 <h3 className="font-bold text-sm flex items-center gap-2"><Key className="w-4 h-4" /> Alterar Minha Senha</h3>
-                <button onClick={() => setActiveModal(null)} className="text-white/80 hover:text-white"><X className="w-5 h-5" /></button>
+                <button onClick={() => { setShowPassword(false); setActiveModal(null); }} className="text-white/80 hover:text-white"><X className="w-5 h-5" /></button>
               </div>
               <form onSubmit={handleChangeMyPassword} className="p-6 space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1">Nova Senha</label>
-                  <input type="password" name="newPass" placeholder="Digite sua nova senha" className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl" />
+                  <div className="relative">
+                    <input type={showPassword ? "text" : "password"} name="newPass" placeholder="Digite sua nova senha" className="w-full text-xs p-2.5 pr-9 bg-slate-50 border border-slate-200 rounded-xl" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1">Confirme a Nova Senha</label>
-                  <input type="password" name="confirmPass" placeholder="Confirme a nova senha" className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl" />
+                  <input type={showPassword ? "text" : "password"} name="confirmPass" placeholder="Confirme a nova senha" className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl" />
                 </div>
                 <button type="submit" className="w-full py-2.5 bg-[#a31d5b] hover:bg-[#8b194d] text-white font-bold text-xs rounded-xl shadow-md">
                   Salvar Nova Senha
