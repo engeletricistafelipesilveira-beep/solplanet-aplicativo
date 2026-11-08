@@ -74,7 +74,7 @@ const supabaseClient = {
     }),
     upsert: async (values, options = {}) => {
       try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?on_conflict=app_id,key`, {
           method: 'POST',
           headers: { 
             'apikey': SUPABASE_ANON_KEY, 
@@ -84,7 +84,10 @@ const supabaseClient = {
           },
           body: JSON.stringify(values)
         });
-        if (!res.ok) return { data: null, error: res.statusText };
+        if (!res.ok) {
+          const errText = await res.text();
+          return { data: null, error: errText };
+        }
         return { data: values, error: null };
       } catch (e) {
         return { data: null, error: e };
