@@ -29,7 +29,9 @@ import {
   LayoutGrid, 
   ShieldAlert, 
   ShieldCheck, 
-  FileDown 
+  FileDown,
+  Eye,
+  EyeOff 
 } from 'lucide-react';
 
 // --- CONFIGURAÇÃO SUPABASE COMPATÍVEL COM ES2015 / VITE / NETLIFY / ENVIRONMENT VARIABLES ---
@@ -101,7 +103,7 @@ const appId = typeof __app_id !== 'undefined' ? __app_id : 'solplanet-process-ap
 
 // MOCK DATA INICIAL (Caso o Supabase esteja desconectado ou em modo fallback)
 const INITIAL_USERS = [
-  { id: '1', username: 'Admin', password: 'Admin', name: 'Nivaldo Silveira (Master)', role: 'Master' },
+  { id: '1', username: 'Admin', password: 'Admin', name: 'Admin', role: 'Master' },
   { id: '2', username: 'admin_user', password: '123456', name: 'Carlos Andrade', role: 'Admin' },
   { id: '3', username: 'user_int', password: '123456', name: 'Juliana Costa', role: 'Usuário Interno' },
   { id: '4', username: 'user_ext', password: '123456', name: 'Técnico Externo', role: 'Usuário Externo' }
@@ -229,6 +231,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAreaFilter, setSelectedAreaFilter] = useState('');
   const [selectedSubareaFilter, setSelectedSubareaFilter] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   // Active Process & Modals
   const [activeProcess, setActiveProcess] = useState(null);
