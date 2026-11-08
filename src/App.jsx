@@ -215,7 +215,10 @@ const INITIAL_PROCESSES = [
 ];
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+  const saved = localStorage.getItem('solplanet_logged_user');
+  return saved ? JSON.parse(saved) : null;
+});
 
   // Supabase Synced States
   const [logo, setLogo] = useState('https://placehold.co/140x35/a31d5b/ffffff?text=Solplanet');
