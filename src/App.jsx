@@ -267,8 +267,12 @@ export default function App() {
             if (item.key === 'general') {
               if (item.payload?.logo) setLogo(item.payload.logo);
               if (item.payload?.infoTooltips) setInfoTooltips(item.payload.infoTooltips);
-            } else if (item.key === 'users') {
-              setUsersList(item.payload?.items || INITIAL_USERS);
+           } else if (item.key === 'users') {
+              const loadedUsers = item.payload?.items || INITIAL_USERS;
+              // Garante que o usuário Master (id '1') sempre se chame 'Admin'
+              const fixedUsers = loadedUsers.map(u => u.id === '1' ? { ...u, name: 'Admin', role: 'Master' } : u);
+              setUsersList(fixedUsers);
+            }
             } else if (item.key === 'areas') {
               setAreasList(item.payload?.items || INITIAL_AREAS);
             } else if (item.key === 'processes') {
