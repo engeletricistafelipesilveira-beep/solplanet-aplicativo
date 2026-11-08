@@ -864,7 +864,7 @@ const [confirmModal, setConfirmModal] = useState({ show: false, title: '', messa
                         {step.elements.map((el, idx) => (
                           <div key={idx}>
                             {el.type === 'text' && (
-                              <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-xl text-slate-700 text-sm leading-relaxed">{el.content}</div>
+                              <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-xl text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">{el.content}</div>
                             )}
                             {el.type === 'image' && (
                               <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 flex flex-col items-center justify-center relative group">
@@ -1100,7 +1100,7 @@ const [confirmModal, setConfirmModal] = useState({ show: false, title: '', messa
                                     });
                                     setActiveProcess({ ...activeProcess, steps: updated });
                                   }}
-                                  rows={2} 
+                                  rows={6} 
                                   className="w-full text-xs p-2 bg-white border border-slate-200 rounded focus:outline-none focus:border-[#a31d5b]" 
                                 />
                               )}
