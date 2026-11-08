@@ -1462,7 +1462,7 @@ export default function App() {
             </div>
           )}
 
-          {/* MODAL: USUÁRIOS */}
+{/* MODAL: USUÁRIOS */}
           {activeModal === 'usuarios' && (
             <div className="bg-white rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden border border-slate-200">
               <div className="bg-[#0f172a] text-white p-4 flex items-center justify-between">
@@ -1550,6 +1550,10 @@ export default function App() {
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
           {/* MODAL: AUDITORIA / LOGS */}
           {activeModal === 'auditoria' && (
             <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-200">
