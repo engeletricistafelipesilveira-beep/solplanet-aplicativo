@@ -230,7 +230,9 @@ export default function App() {
   const [auditLogs, setAuditLogs] = useState([]);
 
   // App Navigation & Filters
-  const [currentView, setCurrentView] = useState('login');
+  const [currentView, setCurrentView] = useState(() => {
+  return localStorage.getItem('solplanet_logged_user') ? 'list' : 'login';
+});
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAreaFilter, setSelectedAreaFilter] = useState('');
   const [selectedSubareaFilter, setSelectedSubareaFilter] = useState('');
