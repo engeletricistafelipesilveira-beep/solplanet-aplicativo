@@ -1307,55 +1307,120 @@ export default function App() {
             </div>
           )}
 
-          {/* MODAL: GERENCIAR ÁREAS E SUBÁREAS */}
+{/* MODAL: GERENCIAR ÁREAS E SUBÁREAS */}
           {activeModal === 'areas' && (
-            <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden border border-slate-200">
+            <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-200">
               <div className="bg-[#0f172a] text-white p-4 flex items-center justify-between">
                 <h3 className="font-bold text-sm flex items-center gap-2"><Layers className="w-4 h-4 text-[#a31d5b]" /> Gerenciar Áreas e Subáreas</h3>
                 <button onClick={() => setActiveModal(null)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
               </div>
-              <form 
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const areaName = e.target.areaName.value.trim();
-                  const subareaName = e.target.subareaName.value.trim();
-                  if (!areaName) return addToast('Digite o nome da área.', 'error');
+              <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+                {currentUser.role === 'Master' && (
+                  <form 
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const areaName = e.target.areaName.value.trim();
+                      const subareaName = e.target.subareaName.value.trim();
+                      if (!areaName) return addToast('Digite o nome da área.', 'error');
 
-                  let updatedAreas = [...areasList];
-                  const existingArea = updatedAreas.find(a => a.name.toLowerCase() === areaName.toLowerCase());
+                      let updatedAreas = [...areasList];
+                      const existingArea = updatedAreas.find(a => a.name.toLowerCase() === areaName.toLowerCase());
 
-                  if (existingArea) {
-                    if (subareaName && !existingArea.subareas.includes(subareaName)) {
-                      existingArea.subareas.push(subareaName);
-                    }
-                  } else {
-                    updatedAreas.push({
-                      id: 'area-' + Date.now(),
-                      name: areaName,
-                      subareas: subareaName ? [subareaName] : []
-                    });
-                  }
+                      if (existingArea) {
+                        if (subareaName && !existingArea.subareas.includes(subareaName)) {
+                          existingArea.subareas.push(subareaName);
+                        }
+                      } else {
+                        updatedAreas.push({
+                          id: 'area-' + Date.now(),
+                          name: areaName,
+                          subareas: subareaName ? [subareaName] : []
+                        });
+                      }
 
-                  setAreasList(updatedAreas);
-                  saveCollection('areas', updatedAreas);
-                  addLog(`Adicionou/Atualizou a área: "${areaName}"`);
-                  addToast('Área salva com sucesso!', 'success');
-                  setActiveModal(null);
-                }} 
-                className="p-6 space-y-4"
-              >
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Nome da Área</label>
-                  <input type="text" name="areaName" placeholder="Ex: Engenharia Elétrica" required className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl" />
+                      setAreasList(updatedAreas);
+                      saveCollection('areas', updatedAreas);
+                      addLog(`Adicionou/Atualizou a área: "${areaName}"`);
+                      addToast('Área salva com sucesso!', 'success');
+                      e.target.reset();
+                    }} 
+                    className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3"
+                  >
+                    <h4 className="font-bold text-xs text-slate-700 uppercase tracking-wider">Adicionar Nova Área / Subárea</h4>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">Nome da Área</label>
+                      <input type="text" name="areaName" placeholder="Ex: Engenharia Elétrica" className="w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">Nova Subárea (Opcional)</label>
+                      <input type="text" name="subareaName" placeholder="Ex: Inversores Híbridos" className="w-full text-xs p-2.5 bg-white border border-slate-200 rounded-xl" />
+                    </div>
+                    <button type="submit" className="w-full py-2 bg-[#a31d5b] hover:bg-[#8b194d] text-white font-bold text-xs rounded-lg shadow-md">
+                      Salvar Área / Subárea
+                    </button>
+                  </form>
+                )}
+
+                <div className="space-y-3">
+                  <h4 className="font-bold text-xs text-slate-500 uppercase tracking-wider">Áreas Cadastradas</h4>
+                  <div className="space-y-2">
+                    {areasList.map(a => (
+                      <div key={a.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-slate-800 text-sm">{a.name}</span>
+                          {currentUser.role === 'Master' && (
+                            <button 
+                              onClick={() => {
+                                const inUse = processes.some(p => p.area === a.name);
+                                if (inUse) return addToast('Não é possível excluir uma área que possui processos vinculados.', 'error');
+                                const updated = areasList.filter(x => x.id !== a.id);
+                                setAreasList(updated);
+                                saveCollection('areas', updated);
+                                addLog(`Excluiu a área: "${a.name}"`);
+                                addToast('Área excluída com sucesso.', 'success');
+                              }}
+                              className="text-xs text-red-600 hover:text-red-800 font-semibold flex items-center gap-1"
+                              title="Excluir Área"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> Excluir Área
+                            </button>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {a.subareas.length === 0 ? (
+                            <span className="text-[11px] text-slate-400 italic">Nenhuma subárea</span>
+                          ) : (
+                            a.subareas.map((sub, sIdx) => (
+                              <span key={sIdx} className="bg-white border border-slate-200 text-slate-700 text-xs px-2 py-0.5 rounded-lg flex items-center gap-1.5">
+                                {sub}
+                                {currentUser.role === 'Master' && (
+                                  <button 
+                                    onClick={() => {
+                                      const updated = areasList.map(item => {
+                                        if (item.id === a.id) {
+                                          return { ...item, subareas: item.subareas.filter(s => s !== sub) };
+                                        }
+                                        return item;
+                                      });
+                                      setAreasList(updated);
+                                      saveCollection('areas', updated);
+                                      addLog(`Excluiu a subárea "${sub}" da área "${a.name}"`);
+                                      addToast('Subárea excluída.', 'success');
+                                    }}
+                                    className="text-slate-400 hover:text-red-600"
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                )}
+                              </span>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Nova Subárea (Opcional)</label>
-                  <input type="text" name="subareaName" placeholder="Ex: Inversores Híbridos" className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl" />
-                </div>
-                <button type="submit" className="w-full py-2.5 bg-[#a31d5b] hover:bg-[#8b194d] text-white font-bold text-xs rounded-xl shadow-md">
-                  Salvar Área / Subárea
-                </button>
-              </form>
+              </div>
             </div>
           )}
 
